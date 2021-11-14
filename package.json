@@ -1,0 +1,81 @@
+{
+  "name": "@osw/memoize",
+  "version": "1.0.0",
+  "description": "Fast memoization for Javascript/Typescript/Etc-based applications, that supports Async functions and RXJS.",
+  "scripts": {
+    "nx": "nx",
+    "build": "nx build",
+    "test": "nx test",
+    "lint": "nx workspace-lint && nx lint",
+    "e2e": "nx e2e",
+    "affected:apps": "nx affected:apps",
+    "affected:libs": "nx affected:libs",
+    "affected:build": "nx affected:build",
+    "affected:e2e": "nx affected:e2e",
+    "affected:test": "nx affected:test",
+    "affected:lint": "nx affected:lint",
+    "affected:dep-graph": "nx affected:dep-graph",
+    "affected": "nx affected",
+    "format": "nx format:write",
+    "format:write": "nx format:write",
+    "format:check": "nx format:check",
+    "update": "nx migrate latest",
+    "workspace-generator": "nx workspace-generator",
+    "dep-graph": "nx dep-graph",
+    "help": "nx help",
+    "build:memoize": "nx build memoize ",
+    "build:memoize:cjs": "nx build memoize --module commonjs --outdir ./dist/cjs",
+    "build:memoize:esm": "nx build memoize --outfile bundle.esm.js ",
+    "build:all:memoize": "npm-run-all --parallel build:memoize:*",
+    "publish:memoize": "npm run build:all:memoize && cd ./dist/packages/memoize && npm publish --public --dry-run ",
+    "watch:memoize": "nx build memoize --watch",
+    "": "",
+    "build:benchmark": "nx build benchmark ",
+    "watch:benchmark": "nx build benchmark --watch",
+    "serve:benchmark": "nx serve benchmark",
+    "build:cjs": "tsc -p tsconfig.json --declaration --outDir ./dist/cjs --module commonjs",
+    "build:esm": "tsc -p tsconfig.json --declaration --outDir ./dist/esm",
+    "build:all": "npm-run-all --parallel build:esm build:cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IP-OpenSourceWeb/Memoize.git"
+  },
+  "keywords": [
+    "Memoize",
+    "Typescript",
+    "Javascript",
+    "Node",
+    "Async",
+    "Rxjs"
+  ],
+  "author": "Iulian Preda",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IP-OpenSourceWeb/Memoize/issues"
+  },
+  "homepage": "https://github.com/IP-OpenSourceWeb/Memoize#readme",
+  "devDependencies": {
+    "@nrwl/cli": "12.10.0",
+    "@nrwl/eslint-plugin-nx": "12.10.0",
+    "@nrwl/jest": "12.10.0",
+    "@nrwl/linter": "12.10.0",
+    "@nrwl/nx-cloud": "latest",
+    "@nrwl/tao": "12.10.0",
+    "@nrwl/workspace": "12.10.0",
+    "@types/jest": "27.0.2",
+    "@types/node": "14.14.33",
+    "@typescript-eslint/eslint-plugin": "~4.31.1",
+    "@typescript-eslint/parser": "~4.31.1",
+    "eslint": "7.22.0",
+    "eslint-config-prettier": "8.1.0",
+    "jest": "27.2.3",
+    "prettier": "^2.3.1",
+    "ts-jest": "27.0.5",
+    "typescript": "~4.3.5"
+  },
+  "dependencies": {
+    "@wanews/nx-esbuild": "^0.16.1",
+    "tslib": "^2.0.0"
+  }
+}

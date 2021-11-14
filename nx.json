@@ -1,0 +1,17 @@
+{
+  "extends": "@nrwl/workspace/presets/npm.json",
+  "npmScope": "osw",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "YjRiNTZhMGQtOTJmMC00NDc2LWE0MDItZWEwZDU1M2U2Yjg1fHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "projects": {}
+}
