@@ -1,6 +1,39 @@
 {
   "version": 2,
-  "projects": {},
+  "projects": {
+    "memoize": {
+      "root": "packages/memoize",
+      "sourceRoot": "packages/memoize/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/memoize",
+            "main": "packages/memoize/src/index.ts",
+            "tsConfig": "packages/memoize/tsconfig.lib.json",
+            "assets": ["packages/memoize/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/memoize/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/memoize"],
+          "options": {
+            "jestConfig": "packages/memoize/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "defaultCollection": "@nrwl/workspace"
   }
