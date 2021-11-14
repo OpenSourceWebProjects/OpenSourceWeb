@@ -32,6 +32,38 @@
           }
         }
       }
+    },
+    "serialize": {
+      "root": "packages/serialize",
+      "sourceRoot": "packages/serialize/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/serialize",
+            "main": "packages/serialize/src/index.ts",
+            "tsConfig": "packages/serialize/tsconfig.lib.json",
+            "assets": ["packages/serialize/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/serialize/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/serialize"],
+          "options": {
+            "jestConfig": "packages/serialize/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

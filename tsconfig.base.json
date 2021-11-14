@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@osw/memoize": ["packages/memoize/src/index.ts"]
+      "@osw/memoize": ["packages/memoize/src/index.ts"],
+      "@osw/serialize": ["packages/serialize/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

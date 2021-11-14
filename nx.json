@@ -16,6 +16,9 @@
   "projects": {
     "memoize": {
       "tags": []
+    },
+    "serialize": {
+      "tags": []
     }
   }
 }
