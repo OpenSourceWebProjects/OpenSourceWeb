@@ -17,7 +17,7 @@
     "memoize": {
       "tags": []
     },
-    "serialize": {
+    "better-stringify": {
       "tags": []
     }
   }

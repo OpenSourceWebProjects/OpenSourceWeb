@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'serialize',
+  displayName: 'better-stringify',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -11,5 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/packages/serialize',
+  coverageDirectory: '../../coverage/packages/better-stringify',
 };
