@@ -1,4 +1,7 @@
 {
   "name": "@osw/better-stringify",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "devDependencies": {
+    "@types/node": "^16.11.7"
+  }
 }

@@ -1,108 +1,75 @@
-import { attr, sjs } from 'slow-json-stringify';
+import { stringify } from './better-stringify';
+import { stringifyPrimitiveArray } from './slow-functions';
+import { stringifyPrimitive } from './stringify-methods';
+import { generateMixedPrimitiveArray, generateStringArr, measureTime } from './utils';
 
-import { stringify, stringifyy } from './better-stringify';
+describe('Benchmark methods - JSON.stringify() vs custom implementations', () => {
+  test('String Literal - String constructor performance compared to string literal', () => {
+    const strArr = generateStringArr();
 
-const alphabet = [
-  'a',
-  'c',
-  'd',
-  'e',
-  'f',
-  'g',
-  'h',
-  'i',
-  'j',
-  'k',
-  'l',
-  'm',
-  'n',
-  'o',
-  'p',
-  'q',
-  'r',
-  's',
-  't',
-  'u',
-  'v',
-  'w',
-  'x',
-  'y',
-  'z',
-  ' ',
-];
-const str = Array(10000)
-  .fill(0)
-  .map(
-    (_, i) =>
-      alphabet[(i * Math.random() * 12345678901412341) % alphabet.length]
-  )
-  .join('');
-const testArr = Array(1000)
-  .fill(0)
-  .map(() => ({
-    a: Math.random() * 12345678901412341,
-    b: Math.random() * 12345678901412341,
-    c: Math.random() * 12345678901412341,
-  }));
-
-const testArr2 = Array(10000)
-  .fill(0)
-  .map(() => Math.random() * 12345678901412341);
-describe('stringify', () => {
-  test('a', () => {
-    const a = {
-      // a: 1,
-      // i: [1, 2, 3],
-      // b: `${str}`,
-      // c: true,
-      // d: null,
-      // e: undefined,
-      // f: () => {},
-      // h: {
-      //   a: 1,
-      // },
-      // g: new Map().set('a', 1),
-      // j: new Set([1, 2, 3]),
-      // k: [...testArr],
-      l: [...testArr2],
-    };
-
-    console.time('JsonStringify');
-    JSON.stringify(a);
-    console.timeEnd('JsonStringify');
-
-    console.time('JsonStringify2');
-    stringifyy(a);
-    console.timeEnd('JsonStringify2');
-
-    console.time('JsonStringify3');
-    const stringfy = sjs({
-      a: attr('number'),
-      i: attr('array'),
-      b: attr('string'),
-      c: attr('boolean'),
-      d: attr('null'),
-      e: attr('null'),
-      f: attr('string', (value) => `${value}`),
-      h: {
-        a: attr('number'),
-      },
-      g: {
-        a: attr('number'),
-      },
-      j: attr('array'),
-      k: {
-        a: attr('array'),
-        b: attr('array'),
-        c: attr('array'),
-      },
-      l: attr('array'),
+    const performanceStringLiteral = measureTime(() => {
+      for (const str of strArr) {
+        `${str}`;
+      }
     });
-    stringfy(a);
-    console.timeEnd('JsonStringify3');
+
+    const performanceStringConstructor = measureTime(() => {
+      for (const str of strArr) {
+        new String(str);
+      }
+    });
+
+    expect(performanceStringLiteral).toBeLessThan(performanceStringConstructor);
+    console.log(
+      performanceStringConstructor.toFixed(2),
+      performanceStringLiteral.toFixed(2)
+    );
   });
 
-  test('JSON.stringify compatibility', () => {
+  test('Custom Stringify - JSON.stringify() performance compared to Custom Stringify for individual primitive values', () => {
+    const arr = generateMixedPrimitiveArray();
+
+    const customTime = measureTime(() => {
+      for (const value of arr) {
+        stringifyPrimitive(value);
+      }
+    });
+    const jsonStringifyTime = measureTime(() => {
+      for (const value of arr) {
+        JSON.stringify(value);
+      }
+    });
+
+    expect(customTime).toBeLessThan(jsonStringifyTime);
+    console.log(customTime.toFixed(2), jsonStringifyTime.toFixed(2));
+  });
+
+  test('JSON.stringify() - JSON.stringify() performance compared to custom Stringify for entire Array of primitive values', () => {
+    const matrix = new Array(1000)
+      .fill(0)
+      .map(() => generateMixedPrimitiveArray());
+
+    const customStrArr = [];
+    const customTime = measureTime(() => {
+      for (const arr of matrix) {
+        customStrArr.push(stringifyPrimitiveArray(arr));
+      }
+    });
+
+    const jsonStringifyStrArr = [];
+
+    const jsonStringifyTime = measureTime(() => {
+      for (const arr of matrix) {
+        jsonStringifyStrArr.push(JSON.stringify(arr));
+      }
+    });
+
+    expect(customStrArr).toEqual(jsonStringifyStrArr);
+    expect(jsonStringifyTime).toBeLessThan(customTime);
+    console.log(customTime.toFixed(2), jsonStringifyTime.toFixed(2));
+  });
+
+  it('is JSON.stringify more', () => {
     const boolean = true;
     expect(stringify(boolean)).toBe(JSON.stringify(boolean)); // 'true'
 
@@ -169,7 +136,7 @@ describe('stringify', () => {
     expect(stringify(nonEnumerable)).toBe(JSON.stringify(nonEnumerable)); // '{"y":"y"}'
   });
 
-  test('JSON.stringify - incompatibility', () => {
+  it('JSON.stringify - incompatibility', () => {
     const undefinedValuesArray = [NaN, null, Infinity, undefined];
     expect(stringify(undefinedValuesArray)).toBe(
       JSON.stringify(undefinedValuesArray)
