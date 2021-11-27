@@ -14,11 +14,12 @@
     }
   },
   "projects": {
+    "better-stringify": {
+      "tags": []
+    },
     "memoize": {
       "tags": []
     },
-    "better-stringify": {
-      "tags": []
-    }
+    "simple": {}
   }
 }

@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@osw/memoize": ["packages/memoize/src/index.ts"],
-      "@osw/better-stringify": ["packages/better-stringify/src/index.ts"]
+      "@osw/better-stringify": ["packages/better-stringify/src/index.ts"],
+      "@osw/memoize": ["packages/memoize/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,38 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "memoize": {
-      "root": "packages/memoize",
-      "sourceRoot": "packages/memoize/src",
-      "projectType": "library",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/packages/memoize",
-            "main": "packages/memoize/src/index.ts",
-            "tsConfig": "packages/memoize/tsconfig.lib.json",
-            "assets": ["packages/memoize/*.md"]
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["packages/memoize/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/memoize"],
-          "options": {
-            "jestConfig": "packages/memoize/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "better-stringify": {
       "root": "packages/better-stringify",
       "sourceRoot": "packages/better-stringify/src",
@@ -61,6 +29,55 @@
           "options": {
             "jestConfig": "packages/better-stringify/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "memoize": {
+      "root": "packages/memoize",
+      "sourceRoot": "packages/memoize/src",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "project": "packages/memoize/package.json",
+
+            "outputPath": "dist/packages/memoize",
+            "entryFile": "packages/memoize/src/index.ts",
+            "tsConfig": "packages/memoize/tsconfig.lib.json",
+            "assets": ["packages/memoize/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/memoize/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/memoize"],
+          "options": {
+            "jestConfig": "packages/memoize/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "simple": {
+      "root": "packages\\simple",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/simple",
+            "tsConfig": "packages/simple/tsconfig.lib.json",
+            "packageJson": "packages/simple/package.json",
+            "main": "packages/simple/index.ts",
+            "assets": ["packages/simple/*.md"]
           }
         }
       }
