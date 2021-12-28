@@ -1,0 +1,53 @@
+{
+    "root": "packages/better-stringify",
+    "sourceRoot": "packages/better-stringify/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/packages/better-stringify",
+                "main": "packages/better-stringify/src/index.ts",
+                "tsConfig": "packages/better-stringify/tsconfig.lib.json",
+                "assets": ["packages/better-stringify/*.md"]
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["packages/better-stringify/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/packages/better-stringify"],
+            "options": {
+                "jestConfig": "packages/better-stringify/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "package": {
+            "executor": "@nrwl/web:rollup",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "project": "packages/better-stringify/package.json",
+                "outputPath": "dist/packages/better-stringify",
+                "entryFile": "packages/better-stringify/src/index.ts",
+                "tsConfig": "packages/better-stringify/tsconfig.lib.json",
+                "compiler": "babel",
+                "format": ["cjs", "esm", "umd"],
+                "assets": ["packages/better-stringify/src/README.md"]
+            }
+        },
+        "publish": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "npm publish --tag=latest --access public"
+            }
+        }
+    },
+    "tags": []
+}

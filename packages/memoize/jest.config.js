@@ -1,15 +1,14 @@
 module.exports = {
-  displayName: 'memoize',
-  preset: '../../jest.preset.js',
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
+    displayName: 'memoize',
+    preset: '../../jest.preset.js',
+    globals: {
+        'ts-jest': {
+            tsconfig: '<rootDir>/tsconfig.spec.json',
+        },
     },
-  },
-  testEnvironment: 'node',
-  transform: {
-    '^.+\\.[tj]sx?$': 'ts-jest',
-  },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/packages/memoize',
+    transform: {
+        '^.+\\.[tj]s$': 'ts-jest',
+    },
+    moduleFileExtensions: ['ts', 'js', 'html'],
+    coverageDirectory: '../../coverage/packages/memoize',
 };

@@ -1,4 +1,5 @@
 {
-  "name": "@osw/memoize",
-  "version": "0.0.1"
+    "name": "@osw/memoize",
+    "version": "0.0.1",
+    "type": "commonjs"
 }

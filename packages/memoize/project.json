@@ -1,0 +1,53 @@
+{
+    "root": "packages/memoize",
+    "sourceRoot": "packages/memoize/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/packages/memoize",
+                "main": "packages/memoize/src/index.ts",
+                "tsConfig": "packages/memoize/tsconfig.lib.json",
+                "assets": ["packages/memoize/*.md"]
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["packages/memoize/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/packages/memoize"],
+            "options": {
+                "jestConfig": "packages/memoize/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "package": {
+            "executor": "@nrwl/web:rollup",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "project": "packages/memoize/package.json",
+                "outputPath": "dist/packages/memoize",
+                "entryFile": "packages/memoize/src/index.ts",
+                "tsConfig": "packages/memoize/tsconfig.lib.json",
+                "compiler": "babel",
+                "format": ["cjs", "esm", "umd"],
+                "assets": ["packages/memoize/src/README.md"]
+            }
+        },
+        "publish": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "npm publish --tag=latest --access public"
+            }
+        }
+    },
+    "tags": []
+}
