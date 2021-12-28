@@ -10,7 +10,7 @@
         "affected:apps": "nx affected:apps",
         "affected:libs": "nx affected:libs",
         "affected:build": "nx affected:build",
-        "affected:package": "nx affected:package",
+        "affected:package": "nx affected --target=package --parallel",
         "affected:format": "nx affected:format",
         "affected:e2e": "nx affected:e2e",
         "affected:test": "nx affected:test",

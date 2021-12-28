@@ -15,5 +15,13 @@
                 "accessToken": "YjRiNTZhMGQtOTJmMC00NDc2LWE0MDItZWEwZDU1M2U2Yjg1fHJlYWQtd3JpdGU="
             }
         }
+    },
+    "targetDependencies": {
+        "publish": [
+            {
+                "target": "package",
+                "projects": "self"
+            }
+        ]
     }
 }
