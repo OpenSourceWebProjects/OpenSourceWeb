@@ -1,5 +1,8 @@
 {
     "name": "@osw/memoize",
     "version": "0.0.1",
-    "type": "commonjs"
+    "type": "commonjs",
+    "dependencies": {
+        "@osw/better-stringify": "*"
+    }
 }

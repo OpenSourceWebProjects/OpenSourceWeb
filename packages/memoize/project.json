@@ -45,7 +45,7 @@
             "executor": "@nrwl/workspace:run-commands",
             "outputs": [],
             "options": {
-                "command": "npm publish --tag=latest --access public"
+                "command": "cd dist/packages/memoize && npm publish --tag=latest --access public"
             }
         }
     },
