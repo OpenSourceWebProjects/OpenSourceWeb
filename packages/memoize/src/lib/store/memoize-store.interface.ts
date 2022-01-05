@@ -14,28 +14,28 @@ export interface IMemoizeStoreMetadata {
 }
 
 export interface IMemoizeStoreOptions<T = unknown> {
-    /** Defaults to: Map */
+    /** Custom store that can be used externally. Defaults to: Map */
     store?: IMemoizeStore<T>;
-    /** Defaults to: undefined - infinite size */
+    /** Size options - Defaults to: undefined - infinite size */
     size?: IMemoizeStoreSize;
-    /** Defaults to: undefined - infinite time span */
+    /** Time options. Defaults to: undefined - infinite time span */
     time?: IMemoizeStoreTime;
 }
 
 export interface IMemoizeStoreSize {
-    /** Defaults to: 'NaN' */
+    /** Maximum number of entries allowed in the store. Defaults to: 'NaN' */
     max: number;
-    /** Defaults to: 'oldest' */
+    /** Remove strategy if the storage is full. Defaults to: 'oldest' which enforces a LRU caching strategy. Available options 'clear' | 'oldest' */
     removeStrategy?: IMemoizeStoreRemoveStrategy;
 }
 
 export interface IMemoizeStoreTime {
-    /** Defaults to: 'NaN' */
+    /** Maximum time allowed. Defaults to: 'NaN' */
     max: number;
-    /** Defaults to: 'ms' */
+    /** Periodically clear the expired entries. Uses the same time unit as `max` - Defaults to undefined */
+    period?: number;
+    /** Time unit - Defaults to: 'ms'. Available options 'ms', 's', 'm', 'h', 'd' */
     unit?: IMemoizeStoreTimeUnits;
-    /** Periodically clear the expired entries */
-    schedule?: {};
 }
 
 export type IMemoizeStoreTimeUnits = 'ms' | 's' | 'm' | 'h' | 'd';
