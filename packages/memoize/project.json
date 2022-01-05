@@ -41,6 +41,23 @@
                 "assets": ["packages/memoize/src/README.md"]
             }
         },
+        "bundle": {
+            "executor": "@nrwl/web:webpack",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "index": "packages/memoize/src/index.html",
+                "tsConfig": "packages/memoize/tsconfig.lib.json",
+                "main": "packages/memoize/src/index.ts",
+                "outputPath": "dist/packages/memoize/bundle",
+                "compiler": "babel",
+                "optimization": true,
+                "extractLicenses": true,
+                "runtimeChunk": false,
+                "vendorChunk": false,
+                "generateIndexHtml": false,
+                "commonChunk": false
+            }
+        },
         "publish": {
             "executor": "@nrwl/workspace:run-commands",
             "outputs": [],

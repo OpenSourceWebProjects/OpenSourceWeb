@@ -22,6 +22,15 @@ describe('memoize', () => {
             return a + b;
         };
         const memoizedAdd = memoize(add);
+        expect(memoizedAdd(1, 2)).toBe(memoizedAdd(1, 2));
+    });
+
+    it('memoize add faster than add', () => {
+        const add = (a: number, b: number) => {
+            wait(5);
+            return a + b;
+        };
+        const memoizedAdd = memoize(add);
         const addTime = measureTimeMs(() => memoizedAdd(1, 2));
         const memoizedAddTime = measureTimeMs(() => memoizedAdd(1, 2));
         expect(addTime).toBeGreaterThan(memoizedAddTime);
