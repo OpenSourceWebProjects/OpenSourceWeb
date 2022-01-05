@@ -1,6 +1,18 @@
 import { MemoizeStore } from './memoize-store';
 
 describe('store', () => {
+    function checkStore<T>(store: MemoizeStore<T>, map: Map<string, T>, key: string, value: T | undefined | null) {
+        expect(store.get(key)).toBe(map.get(key));
+        expect(store.get(key)).toBe(value);
+        expect(map.get(key)).toBe(value);
+    }
+
+    function checkStoreLength<T>(store: MemoizeStore<T>, map: Map<string, T>, length: number) {
+        expect(store.length).toBe(map.size);
+        expect(store.length).toBe(length);
+        expect(map.size).toBe(length);
+    }
+
     it('store get', () => {
         const map = new Map<string, number>();
         map.set('a', 1);
@@ -14,13 +26,8 @@ describe('store', () => {
         const store = new MemoizeStore({ store: map });
         store.set('a', 1);
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(1);
-        expect(map.size).toBe(1);
-
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(1);
-        expect(map.get('a')).toBe(1);
+        checkStoreLength(store, map, 1);
+        checkStore(store, map, 'a', 1);
     });
 
     it('store delete', () => {
@@ -29,13 +36,8 @@ describe('store', () => {
         store.set('a', 1);
         store.delete('a');
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(0);
-        expect(map.size).toBe(0);
-
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(undefined);
-        expect(map.get('a')).toBe(undefined);
+        checkStoreLength(store, map, 0);
+        checkStore(store, map, 'a', undefined);
     });
 
     it('store clear', () => {
@@ -45,13 +47,8 @@ describe('store', () => {
         store.set('b', 1);
         store.clear();
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(0);
-        expect(map.size).toBe(0);
-
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(undefined);
-        expect(map.get('a')).toBe(undefined);
+        checkStoreLength(store, map, 0);
+        checkStore(store, map, 'a', undefined);
     });
 
     it('store max size', () => {
@@ -60,17 +57,9 @@ describe('store', () => {
         store.set('a', 1);
         store.set('b', 1);
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(1);
-        expect(map.size).toBe(1);
-
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(undefined);
-        expect(map.get('a')).toBe(undefined);
-
-        expect(store.get('b')).toBe(map.get('b'));
-        expect(store.get('b')).toBe(1);
-        expect(map.get('b')).toBe(1);
+        checkStoreLength(store, map, 1);
+        checkStore(store, map, 'a', undefined);
+        checkStore(store, map, 'b', 1);
     });
 
     it('store max size - clear all', () => {
@@ -80,21 +69,10 @@ describe('store', () => {
         store.set('b', 1);
         store.set('c', 1);
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(1);
-        expect(map.size).toBe(1);
-
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(undefined);
-        expect(map.get('a')).toBe(undefined);
-
-        expect(store.get('b')).toBe(map.get('b'));
-        expect(store.get('b')).toBe(undefined);
-        expect(map.get('b')).toBe(undefined);
-
-        expect(store.get('c')).toBe(map.get('c'));
-        expect(store.get('c')).toBe(1);
-        expect(map.get('c')).toBe(1);
+        checkStoreLength(store, map, 1);
+        checkStore(store, map, 'a', undefined);
+        checkStore(store, map, 'b', undefined);
+        checkStore(store, map, 'c', 1);
     });
 
     it('store max size - delete oldest', () => {
@@ -104,61 +82,48 @@ describe('store', () => {
         store.set('b', 1);
         store.set('c', 1);
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(2);
-        expect(map.size).toBe(2);
-
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(undefined);
-        expect(map.get('a')).toBe(undefined);
-
-        expect(store.get('b')).toBe(map.get('b'));
-        expect(store.get('b')).toBe(1);
-        expect(map.get('b')).toBe(1);
-
-        expect(store.get('c')).toBe(map.get('c'));
-        expect(store.get('c')).toBe(1);
-        expect(map.get('c')).toBe(1);
+        checkStoreLength(store, map, 2);
+        checkStore(store, map, 'a', undefined);
+        checkStore(store, map, 'b', 1);
+        checkStore(store, map, 'c', 1);
     });
 
     it('store max time', () => {
-        const wait = (ms: number) => {
-            const start = Date.now();
-            let now = start;
-            while (now - start < ms) {
-                now = Date.now();
-            }
-        };
+        jest.useFakeTimers();
 
         const map = new Map<string, number>();
         const store = new MemoizeStore({ store: map, time: { max: 3, unit: 's' } });
         store.set('a', 1);
         store.set('b', 1);
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(2);
-        expect(map.size).toBe(2);
+        checkStoreLength(store, map, 2);
+        checkStore(store, map, 'a', 1);
+        checkStore(store, map, 'b', 1);
 
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(1);
-        expect(map.get('a')).toBe(1);
+        jest.advanceTimersByTime(10000);
 
-        expect(store.get('b')).toBe(map.get('b'));
-        expect(store.get('b')).toBe(1);
-        expect(map.get('b')).toBe(1);
+        checkStore(store, map, 'a', undefined);
+        checkStore(store, map, 'b', undefined);
 
-        wait(3000);
+        // Deleted after trying to get it
+        checkStoreLength(store, map, 0);
+    });
 
-        expect(store.get('a')).toBe(map.get('a'));
-        expect(store.get('a')).toBe(undefined);
-        expect(map.get('a')).toBe(undefined);
+    it('store scheduled cleanup', () => {
+        jest.useFakeTimers();
 
-        expect(store.get('b')).toBe(map.get('b'));
-        expect(store.get('b')).toBe(undefined);
-        expect(map.get('b')).toBe(undefined);
+        const map = new Map<string, number>();
+        const store = new MemoizeStore({ store: map, time: { max: 3, unit: 's', period: 5 } });
+        store.set('a', 1);
+        store.set('b', 1);
 
-        expect(store.length).toBe(map.size);
-        expect(store.length).toBe(0);
-        expect(map.size).toBe(0);
+        checkStoreLength(store, map, 2);
+        checkStore(store, map, 'a', 1);
+        checkStore(store, map, 'b', 1);
+
+        jest.advanceTimersByTime(10000);
+
+        // deleted by the scheduled cleanup
+        checkStoreLength(store, map, 0);
     });
 });
