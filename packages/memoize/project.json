@@ -55,7 +55,9 @@
                 "runtimeChunk": false,
                 "vendorChunk": false,
                 "generateIndexHtml": false,
-                "commonChunk": false
+                "commonChunk": false,
+                "namedChunks": false,
+                "webpackConfig": "webpack.config.umd.js"
             }
         },
         "publish": {

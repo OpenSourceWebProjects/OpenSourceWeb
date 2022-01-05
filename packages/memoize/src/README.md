@@ -9,3 +9,9 @@ Run `nx build memoize` to build the library.
 ## Running unit tests
 
 Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
+
+Roadmap
+
+-   ~~Add scheduled cleaning of expired entries~~.
+-   Add logging capabilities
+-   Add unintrusive getLength function to sync the length with the internal store in cases that the custom store is updated externally.
