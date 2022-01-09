@@ -59,11 +59,9 @@ export class MemoizeStore<T> implements IMemoizeStore<T> {
 
     private createStrategy() {
         if (this.time) {
-            console.log(this.time);
             // schedule clear of expired entries
             if (this.time?.period) {
                 setInterval(() => {
-                    console.log('triggering clear of expired entries', this.metadata.values());
                     this.metadata.forEach((entry, key) => {
                         if (isExpired(entry.addedOn, this.maxTime)) this.delete(key);
                     });

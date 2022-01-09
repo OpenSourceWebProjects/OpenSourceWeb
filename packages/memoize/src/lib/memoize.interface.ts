@@ -6,3 +6,5 @@ export interface MemoizeOptions<T = unknown> extends IMemoizeStoreOptions<T> {
     /** Defaults to: True */
     sortedArgs?: boolean;
 }
+
+export type FunctionCallback<T extends any = never> = (...args: never[]) => T;
