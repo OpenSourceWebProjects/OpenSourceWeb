@@ -1,10 +1,12 @@
 import { stringify } from '@osw/better-stringify';
 
+import { MemoizeRecursiveCallback } from '..';
 import {
     MemoizeAsyncCallback,
     MemoizeCallback,
     MemoizedAsyncFunction,
     MemoizedFunction,
+    MemoizedRecursiveFunction,
     MemoizeOptions,
 } from './memoize.interface';
 import { MemoizeStore } from './store/memoize-store';
@@ -53,4 +55,22 @@ function memoizeWithStore<T extends MemoizeCallback>(
         store.set(key, result);
         return result;
     };
+}
+
+export function memoizeRecursive<T extends MemoizeRecursiveCallback>(
+    callback: T,
+    options?: MemoizeOptions<ReturnType<T>>
+): MemoizedRecursiveFunction<T> {
+    const store = new MemoizeStore(options);
+
+    const fn = (...args: Parameters<typeof callback>): ReturnType<typeof callback> => {
+        const key = stringify(args);
+        const value = store.get(key);
+        if (value) return value;
+        const result = callback(...([...args, fn] as Parameters<typeof callback>));
+        store.set(key, result);
+        return result;
+    };
+
+    return fn;
 }

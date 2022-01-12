@@ -50,26 +50,60 @@ describe('memoize', () => {
         expect(addTime).toBeGreaterThan(memoizedAddTime);
     });
 
-    it('memoize recursive fibbonaci', () => {
+    it('memoize recursive fibonacci - default callback', () => {
         jest.useFakeTimers();
-        function fibonacci(num: number): number {
+
+        const recursiveStore = new Map();
+        const store = new Map();
+        function fibonacci(num: number, callback = fibonacci): number {
             jest.advanceTimersByTime(500);
 
             if (num < 2) {
                 return num;
             } else {
-                return fibonacci(num - 1) + fibonacci(num - 2);
+                return callback(num - 1) + callback(num - 2);
             }
         }
-        const memoizedRecursiveFibbonaci = memoizeRecursive(fibonacci, {}, { jest });
-        const unMemoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibbonaci(35));
-        const memoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibbonaci(34));
 
-        const memoizedFibbonaci = memoize(fibonacci);
-        const unMemoizedTime = measureTimeMs(() => memoizedFibbonaci(35));
-        const memoizedTime = measureTimeMs(() => memoizedFibbonaci(34));
+        const memoizedRecursiveFibonacci = memoizeRecursive(fibonacci, { store: recursiveStore });
+        const unMemoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(10));
+        const memoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(11));
 
-        console.log(unMemoizedRecursiveTime, memoizedRecursiveTime, unMemoizedTime, memoizedTime);
+        const memoizedFibonacci = memoize(fibonacci, { store });
+        const unMemoizedTime = measureTimeMs(() => memoizedFibonacci(10));
+        const memoizedTime = measureTimeMs(() => memoizedFibonacci(11));
+
+        expect(store.size).toBe(2);
+        expect(recursiveStore.size).toBe(12);
+        expect(unMemoizedRecursiveTime).toBeGreaterThan(memoizedRecursiveTime);
+        expect(memoizedTime).toBeGreaterThan(memoizedRecursiveTime);
+    });
+
+    it('memoize recursive fibonacci - optional callback', () => {
+        jest.useFakeTimers();
+
+        const recursiveStore = new Map();
+        const store = new Map();
+        function fibonacci(num: number, callback?: typeof fibonacci): number {
+            jest.advanceTimersByTime(500);
+
+            if (num < 2) {
+                return num;
+            } else {
+                return (callback ?? fibonacci)(num - 1) + (callback ?? fibonacci)(num - 2);
+            }
+        }
+
+        const memoizedRecursiveFibonacci = memoizeRecursive(fibonacci, { store: recursiveStore });
+        const unMemoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(10));
+        const memoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(11));
+
+        const memoizedFibonacci = memoize(fibonacci, { store });
+        const unMemoizedTime = measureTimeMs(() => memoizedFibonacci(10));
+        const memoizedTime = measureTimeMs(() => memoizedFibonacci(11));
+
+        expect(store.size).toBe(2);
+        expect(recursiveStore.size).toBe(12);
         expect(unMemoizedRecursiveTime).toBeGreaterThan(memoizedRecursiveTime);
         expect(memoizedTime).toBeGreaterThan(memoizedRecursiveTime);
     });
