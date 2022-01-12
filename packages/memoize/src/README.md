@@ -10,7 +10,7 @@ Run `nx build memoize` to build the library.
 
 Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
 
-Roadmap
+# Roadmap
 
 -   ~~Add scheduled cleaning of expired entries~~.
 -   Add logging capabilities
@@ -18,8 +18,12 @@ Roadmap
 -   ~~Add async/await memoization~~
 -   ~~Add recursive memoization~~
 -   Improve recursive memoization to support:
-    -   async functions
-    -   generator functions
-    -   anonymous functions
-    -   outer scope variables
+    -   async functions - implementation, tests
+    -   generator functions - ~~implementation~~, tests
+    -   anonymous functions - ~~implementation~~, tests
+    -   outer scope variables - ~~implementation~~, tests
 -   Add rxjs operator
+
+## Nice to have
+
+-   Recursive function memoization without needing additional parameters
