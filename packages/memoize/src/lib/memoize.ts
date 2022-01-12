@@ -1,27 +1,32 @@
 import { stringify } from '@osw/better-stringify';
 
-import { MemoizeOptions } from './memoize.interface';
-import { splitAtFirstInstance } from './shared';
+import {
+    MemoizeAsyncCallback,
+    MemoizeCallback,
+    MemoizedAsyncFunction,
+    MemoizedFunction,
+    MemoizeOptions,
+} from './memoize.interface';
 import { MemoizeStore } from './store/memoize-store';
 
-export function memoizeLast<T extends (...args: never[]) => ReturnType<T>>(
+export function memoizeLast<T extends MemoizeCallback>(
     callback: T,
     options?: MemoizeOptions<ReturnType<T>>
-) {
+): MemoizedFunction<T> {
     return memoize(callback, { ...options, size: { max: 1 } });
 }
 
-export function memoize<T extends (...args: never[]) => ReturnType<T>>(
+export function memoize<T extends MemoizeCallback>(
     callback: T,
     options?: MemoizeOptions<ReturnType<T>>
-) {
+): MemoizedFunction<T> {
     return memoizeWithStore(callback, options, new MemoizeStore(options));
 }
 
-export function memoizeAsync<T extends (...args: never[]) => Promise<Awaited<ReturnType<T>>>>(
+export function memoizeAsync<T extends MemoizeAsyncCallback>(
     callback: T,
     options?: MemoizeOptions<ReturnType<T>>
-) {
+): MemoizedAsyncFunction<T> {
     const store = new MemoizeStore(options);
     return async (...args: Parameters<typeof callback>): Promise<Awaited<ReturnType<typeof callback>>> => {
         const key = stringify(args);
@@ -34,19 +39,11 @@ export function memoizeAsync<T extends (...args: never[]) => Promise<Awaited<Ret
     };
 }
 
-export function memoizeRecursive<T extends (...args: never[]) => ReturnType<T>>(
-    callback: T,
-    options?: MemoizeOptions<ReturnType<T>>,
-    optionalObjects: Record<string, unknown> = {}
-) {
-    return memoizeRecursion(callback, options, new MemoizeStore(options), optionalObjects);
-}
-
-function memoizeWithStore<T extends (...args: never[]) => ReturnType<T>>(
+function memoizeWithStore<T extends MemoizeCallback>(
     callback: T,
     options?: MemoizeOptions<ReturnType<T>>,
     store: MemoizeStore<ReturnType<T>> = new MemoizeStore(options)
-) {
+): MemoizedFunction<T> {
     return (...args: Parameters<typeof callback>): ReturnType<typeof callback> => {
         const key = stringify(args);
         const value = store.get(key);
@@ -56,102 +53,4 @@ function memoizeWithStore<T extends (...args: never[]) => ReturnType<T>>(
         store.set(key, result);
         return result;
     };
-}
-
-function memoizeRecursion<T extends (...args: never[]) => ReturnType<T>>(
-    callback: T,
-    options?: MemoizeOptions<ReturnType<T>>,
-    store: MemoizeStore<ReturnType<T>> = new MemoizeStore(options),
-    optionalObjects: Record<string, unknown> = {}
-) {
-    return changeToRecursiveMemoization(callback, options, optionalObjects);
-    // function fn(): (...args: Parameters<typeof callback>) => ReturnType<typeof callback> {
-    //     return memoizeWithStore(changeToRecursiveMemoization(callback, fn), options, store);
-    // }
-    // return fn();
-    // {
-    //     // const obj = { callback };
-    //     // const proxy = new Proxy(obj.callback, {
-    //     //     apply(target, innerThis, argsList: Parameters<T>) {
-    //     //         console.log(target, innerThis, argsList);
-    //     //         return memoizeWithStore(target, options, store)(...argsList);
-    //     //     },
-    //     // });
-    //     // return new Proxy(proxy, {
-    //     //     apply(target, innerThis, argsList: Parameters<T>) {
-    //     //         console.log(target, innerThis, argsList);
-    //     //         return memoizeWithStore(target.callback, options, store)(...argsList);
-    //     //     },
-    //     // }).callback;
-    //     // }
-    //     // return proxy;
-    //     // return memoize(callback, { ...options, store });}
-    // }
-}
-
-function changeToRecursiveMemoization<T extends (...args: never[]) => ReturnType<T>>(
-    callback: T,
-    options?: MemoizeOptions<ReturnType<T>>,
-    optionalObjects: Record<string, unknown> = {}
-): (...args: Parameters<T>) => ReturnType<T> {
-    const newFunctionParameterName = 'memoizedCallback';
-    const functionObj = { [newFunctionParameterName]: memoizeWithStore(callback, options) };
-    let canBeRecursivelyMemoized = true;
-    const errorMessages = [];
-    const nativeCodeStr = '(){[nativecode]}';
-    const functionName = callback.name;
-    let functionCode;
-
-    try {
-        functionCode = callback.toString();
-    } catch (error) {
-        if ((error as Error).constructor == TypeError) {
-            if (Function(`return ${functionName}.toString()`)() != nativeCodeStr) {
-                errorMessages.push(
-                    `Possible Proxy detected: function has a name but no accessible source code. Consider memoizing the target function, ${functionName}.`
-                );
-            } else {
-                errorMessages.push(
-                    `Function has a name but no accessible source code. Applying toString() to its name, ${functionName}, returns '[native code]'.`
-                );
-            }
-        } else {
-            errorMessages.push('Unexpected error calling toString on the argument.');
-        }
-
-        canBeRecursivelyMemoized = false;
-    }
-    if (!functionCode || functionCode.replace(/^[^(]+|\s+/g, '') === nativeCodeStr) {
-        errorMessages.push(`Cannot access source code, '[native code]' provided.`);
-        canBeRecursivelyMemoized = false;
-    }
-    if (!canBeRecursivelyMemoized) {
-        console.warn('The function cannot be memoized recursively, it will use sequential memoization instead.');
-        return functionObj[newFunctionParameterName];
-    }
-
-    if (functionCode) {
-        console.log(functionCode, functionName);
-        const [functionCodeStart, functionCodeEnd] = splitAtFirstInstance(functionCode, '(');
-        if (functionCodeStart.includes('function')) {
-            // function or function generator detected
-
-            const functionNameRegex = new RegExp(`\\b${functionName}\\b`, 'gi');
-            const code =
-                functionCodeStart + '(' + functionCodeEnd.replaceAll(functionNameRegex, newFunctionParameterName);
-            console.log(functionNameRegex, '\n', code);
-            functionObj[newFunctionParameterName] = memoizeWithStore(
-                Function(
-                    newFunctionParameterName,
-                    ...Object.keys(optionalObjects),
-                    '"use strict";return ' + code
-                )(functionObj[newFunctionParameterName], Object.values(optionalObjects)),
-                options
-            );
-            return functionObj[newFunctionParameterName];
-        }
-    } else {
-        // anonimous function detected
-    }
-    return functionObj[newFunctionParameterName];
 }
