@@ -18,7 +18,7 @@ Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
 -   ~~Add async/await memoization~~
 -   ~~Add recursive memoization~~
 -   Improve recursive memoization to support:
-    -   async functions - implementation, tests
+    -   async functions - ~~implementation, tests~~
     -   generator functions - ~~implementation~~, tests
     -   anonymous functions - ~~implementation~~, tests
     -   outer scope variables - ~~implementation~~, tests
@@ -27,3 +27,5 @@ Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
 ## Nice to have
 
 -   Recursive function memoization without needing additional parameters
+-   Autodetect async functions
+-   Unite all memoization types under the same API with correct type inference

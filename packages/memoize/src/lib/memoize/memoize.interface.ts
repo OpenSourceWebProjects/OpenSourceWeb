@@ -1,10 +1,9 @@
-import { IMemoizeStoreOptions } from './store/memoize-store.interface';
+import { VariableArgs } from '../shared.interface';
 
-export interface MemoizeOptions<T = unknown> extends IMemoizeStoreOptions<T> {
+export interface MemoizeStringify {
     /** Defaults to: @ows/better-stringify */
-    stringify?: (value: unknown) => string;
-    /** Defaults to: True */
-    sortedArgs?: boolean;
+    stringify: (value: any, ...args: any[]) => string;
+    args?: any[];
 }
 
 export type MemoizeCallback<
@@ -22,6 +21,11 @@ export type MemoizeAsyncCallback<
     P extends never[] = never[],
     R extends Promise<never> = Promise<never>
 > = (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>>;
+export type MemoizeAsyncRecursiveCallback<
+    T extends (...args: VariableArgs<T, P>) => Promise<R> = (...args: any[]) => Promise<any>, //any is needed to avoid TS error, it does not affect typings
+    P extends never[] = never[],
+    R extends Promise<never> = Promise<never>
+> = (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>>;
 
 export type MemoizedFunction<T extends MemoizeCallback> = (...args: Parameters<T>) => ReturnType<T>;
 export type MemoizedRecursiveFunction<T extends MemoizeRecursiveCallback> = (...args: Parameters<T>) => ReturnType<T>;
@@ -29,4 +33,6 @@ export type MemoizedAsyncFunction<T extends MemoizeAsyncCallback> = (
     ...args: Parameters<T>
 ) => Promise<Awaited<ReturnType<T>>>;
 
-type VariableArgs<T = never, ARR extends never[] = never[]> = [...ARR, T | undefined];
+export type MemoizedAsyncRecursiveFunction<T extends MemoizeAsyncRecursiveCallback> = (
+    ...args: Parameters<T>
+) => Promise<Awaited<ReturnType<T>>>;

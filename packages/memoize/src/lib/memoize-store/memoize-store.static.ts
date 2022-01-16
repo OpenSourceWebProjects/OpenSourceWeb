@@ -3,7 +3,7 @@ import {
     IMemoizeStoreSize,
     IMemoizeStoreTime,
     IMemoizeStoreTimeUnits,
-} from './memoize-store.interface';
+} from './memoize-store.interface.api';
 
 export const STORE_OPTIONS: IMemoizeStoreOptions = {
     size: {

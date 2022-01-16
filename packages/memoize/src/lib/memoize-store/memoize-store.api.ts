@@ -4,7 +4,7 @@ import {
     IMemoizeStoreOptions,
     IMemoizeStoreSize,
     IMemoizeStoreTime,
-} from './memoize-store.interface';
+} from './memoize-store.interface.api';
 import { getTimeInMilliseconds, isExpired, STORE_OPTIONS } from './memoize-store.static';
 
 export class MemoizeStore<T> implements IMemoizeStore<T> {

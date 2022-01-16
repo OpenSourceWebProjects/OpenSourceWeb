@@ -1,4 +1,4 @@
-import { MemoizeStore } from './memoize-store';
+import { MemoizeStore } from './memoize-store.api';
 
 describe('store', () => {
     function checkStore<T>(store: MemoizeStore<T>, map: Map<string, T>, key: string, value: T | undefined | null) {
