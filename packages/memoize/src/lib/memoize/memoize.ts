@@ -19,13 +19,13 @@ export function memoize<T extends MemoizeCallback>(
     const getArgs = referenceItself
         ? (args: Parameters<T>) => [...args, fn] as Parameters<T>
         : (args: Parameters<T>) => args;
-
-    const fn = (...args: Parameters<typeof callback>): ReturnType<typeof callback> => {
+    const callbackFn = callback.bind(options?.thisArg);
+    const fn = function (...args: Parameters<typeof callback>): ReturnType<typeof callback> {
         const key = stringify.stringify(args, ...(stringify.args ?? []));
         const value = store.get(key);
         if (value) return value;
 
-        const result = callback(...getArgs(args));
+        const result = callbackFn(...getArgs(args));
         store.set(key, result);
         return result;
     };
@@ -43,12 +43,14 @@ export function memoizeAsync<T extends MemoizeAsyncCallback>(
     const getArgs = referenceItself
         ? (args: Parameters<T>) => [...args, fn] as Parameters<T>
         : (args: Parameters<T>) => args;
+    const callbackFn = callback.bind(options?.thisArg);
+
     const fn = async (...args: Parameters<typeof callback>): Promise<Awaited<ReturnType<typeof callback>>> => {
         const key = stringify.stringify(args, ...(stringify.args ?? []));
         const value = store.get(key);
         if (value) return await Promise.resolve(value);
 
-        const result = await callback(...getArgs(args));
+        const result = await callbackFn(...getArgs(args));
         store.set(key, result);
         return result;
     };

@@ -5,7 +5,7 @@ describe('memoize', () => {
     it('memoize should be correct', () => {
         jest.useFakeTimers();
         const add = (a: number, b: number) => {
-            jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(50000);
             return a + b;
         };
         const memoizedAdd = memoize(add);
@@ -15,7 +15,7 @@ describe('memoize', () => {
     it('memoize should be faster', () => {
         jest.useFakeTimers();
         const add = (a: number, b: number) => {
-            jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(50000);
             return a + b;
         };
         const memoizedAdd = memoize(add);
@@ -27,7 +27,7 @@ describe('memoize', () => {
     it('async memoize should be faster', async () => {
         jest.useFakeTimers();
         const add = async (a: number, b: number) => {
-            jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(50000);
             return Promise.resolve(a + b);
         };
         const memoizedAdd = memoizeAsync(add);

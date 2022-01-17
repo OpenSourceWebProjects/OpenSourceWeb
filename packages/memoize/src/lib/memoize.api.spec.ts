@@ -1,43 +1,46 @@
-import { memoizeAsyncRecursive, memoizeRecursive } from '..';
+import { memoizeAsyncRecursive, memoizeLast, memoizeRecursive } from '..';
 import { memoize, memoizeAsync } from './memoize.api';
 import { measureTimeMs, measureTimeMsAsync } from './shared';
 
-describe('memoize', () => {
-    it('memoize should be correct', () => {
+describe('Memoize - all default APIs should work as expected', () => {
+    it('Memoize last should hold only the last value', () => {
         jest.useFakeTimers();
+
+        const store = new Map();
+
         const add = (a: number, b: number) => {
-            jest.advanceTimersByTime(50000);
+            jest.advanceTimersByTime(500);
             return a + b;
         };
-        const memoizedAdd = memoize(add);
-        expect(memoizedAdd(1, 2)).toBe(memoizedAdd(1, 2));
+        const memoizedAdd = memoizeLast(add, { store });
+        memoizedAdd(1, 2);
+        memoizedAdd(2, 3);
+
+        expect(Array.from(store.keys()).length).toBe(1);
+        expect(Array.from(store.keys())[0]).toBe('[2,3]');
     });
 
-    it('memoize should be faster', () => {
+    it('Async memoization', async () => {
         jest.useFakeTimers();
-        const add = (a: number, b: number) => {
-            jest.advanceTimersByTime(50000);
-            return a + b;
-        };
-        const memoizedAdd = memoize(add);
-        const addTime = measureTimeMs(() => memoizedAdd(1, 2));
-        const memoizedAddTime = measureTimeMs(() => memoizedAdd(1, 2));
-        expect(addTime).toBeGreaterThan(memoizedAddTime);
-    });
+        let counter = 0;
 
-    it('async memoization should be faster', async () => {
-        jest.useFakeTimers();
-        const add = async (a: number, b: number) => {
-            jest.advanceTimersByTime(50000);
+        const store = new Map();
+        async function asyncAdd(a: number, b: number) {
+            jest.advanceTimersByTime(500);
+            counter++;
             return Promise.resolve(a + b);
-        };
-        const memoizedAdd = memoizeAsync(add);
-        const addTime = await measureTimeMsAsync(() => memoizedAdd(1, 2));
-        const memoizedAddTime = await measureTimeMsAsync(() => memoizedAdd(1, 2));
-        expect(addTime).toBeGreaterThan(memoizedAddTime);
-    });
+        }
 
-    it('recursive memoization with default callback', () => {
+        const memoized = memoizeAsync(asyncAdd, { store });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const unMemoizedTime = await measureTimeMsAsync(() => memoized(10, 11));
+        const memoizedTime = await measureTimeMsAsync(() => memoized(10, 11));
+
+        expect(store.size).toBe(1);
+        expect(counter).toBe(1); // Only one call to the async function
+        expect(unMemoizedTime).toBeGreaterThan(memoizedTime);
+    });
+    it('Recursive memoization with default callback', () => {
         jest.useFakeTimers();
 
         const recursiveStore = new Map();
@@ -67,7 +70,7 @@ describe('memoize', () => {
         expect(memoizedTime).toBeGreaterThan(memoizedRecursiveTime);
     });
 
-    it('recursive memoization with optional callback', () => {
+    it('Recursive memoization with optional callback', () => {
         jest.useFakeTimers();
 
         const recursiveStore = new Map();
@@ -96,7 +99,7 @@ describe('memoize', () => {
         expect(unMemoizedRecursiveTime).toBeGreaterThan(memoizedRecursiveTime);
         expect(memoizedTime).toBeGreaterThan(memoizedRecursiveTime);
     });
-    it('async recursive memoization with default callback', async () => {
+    it('Async recursive memoization with default callback', async () => {
         jest.useFakeTimers();
 
         const recursiveStore = new Map();
@@ -125,7 +128,7 @@ describe('memoize', () => {
         expect(unMemoizedAsyncRecursiveTime).toBeGreaterThan(memoizedAsyncRecursiveTime);
         expect(memoizedTime).toBeGreaterThan(memoizedAsyncRecursiveTime);
     });
-    it('async recursive memoization with optional callback', async () => {
+    it('Async recursive memoization with optional callback', async () => {
         jest.useFakeTimers();
 
         const recursiveStore = new Map();
