@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { VariableArgs } from '../shared.interface';
 
 export interface MemoizeStringify {
@@ -6,25 +7,23 @@ export interface MemoizeStringify {
     args?: any[];
 }
 
-export type MemoizeCallback<
-    T extends (...args: P) => R = (...args: never[]) => never,
-    P extends never[] = never[],
-    R extends never = never
-> = (...args: Parameters<T>) => ReturnType<T>;
+export type MemoizeCallback<T extends (...args: P) => R = (...args: any[]) => any, P extends any[] = any[], R = any> = (
+    ...args: Parameters<T>
+) => ReturnType<T>;
 export type MemoizeRecursiveCallback<
-    T extends (...args: VariableArgs<T, P>) => R = (...args: any[]) => any, //any is needed to avoid TS error, it does not affect typings
-    P extends never[] = never[],
-    R extends never = never
+    T extends (...args: VariableArgs<T, P>) => R = (...args: any[]) => any,
+    P extends any[] = any[],
+    R = any
 > = (...args: Parameters<T>) => ReturnType<T>;
 export type MemoizeAsyncCallback<
-    T extends (...args: P) => Promise<R> = (...args: never[]) => Promise<never>,
-    P extends never[] = never[],
-    R extends Promise<never> = Promise<never>
+    T extends (...args: P) => Promise<R> = (...args: any[]) => Promise<any>,
+    P extends any[] = any[],
+    R extends Promise<any> = Promise<any>
 > = (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>>;
 export type MemoizeAsyncRecursiveCallback<
-    T extends (...args: VariableArgs<T, P>) => Promise<R> = (...args: any[]) => Promise<any>, //any is needed to avoid TS error, it does not affect typings
-    P extends never[] = never[],
-    R extends Promise<never> = Promise<never>
+    T extends (...args: VariableArgs<T, P>) => Promise<R> = (...args: any[]) => Promise<any>,
+    P extends any[] = any[],
+    R extends Promise<any> = Promise<any>
 > = (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>>;
 
 export type MemoizedFunction<T extends MemoizeCallback> = (...args: Parameters<T>) => ReturnType<T>;

@@ -1,6 +1,7 @@
 {
     "version": 2,
     "projects": {
+        "applications-memoize-demo": "packages/applications/memoize-demo",
         "better-stringify": "packages/better-stringify",
         "memoize": "packages/memoize"
     }

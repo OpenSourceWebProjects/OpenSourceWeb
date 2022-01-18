@@ -16,9 +16,7 @@ export function memoize<T extends MemoizeCallback>(
 ): MemoizedFunction<T> {
     const stringify: MemoizeStringify = options?.stringify ?? MEMOIZE_STRINGIFY_OPTIONS;
     const store = new MemoizeStore(options);
-    const getArgs = referenceItself
-        ? (args: Parameters<T>) => [...args, fn] as Parameters<T>
-        : (args: Parameters<T>) => args;
+    const getArgs = referenceItself ? (args: Parameters<T>) => [...args, fn] : (args: Parameters<T>) => args;
     const callbackFn = callback.bind(options?.thisArg);
     const fn = function (...args: Parameters<typeof callback>): ReturnType<typeof callback> {
         const key = stringify.stringify(args, ...(stringify.args ?? []));
@@ -40,9 +38,7 @@ export function memoizeAsync<T extends MemoizeAsyncCallback>(
 ): MemoizedAsyncFunction<T> {
     const stringify: MemoizeStringify = options?.stringify ?? MEMOIZE_STRINGIFY_OPTIONS;
     const store = new MemoizeStore(options);
-    const getArgs = referenceItself
-        ? (args: Parameters<T>) => [...args, fn] as Parameters<T>
-        : (args: Parameters<T>) => args;
+    const getArgs = referenceItself ? (args: Parameters<T>) => [...args, fn] : (args: Parameters<T>) => args;
     const callbackFn = callback.bind(options?.thisArg);
 
     const fn = async (...args: Parameters<typeof callback>): Promise<Awaited<ReturnType<typeof callback>>> => {

@@ -1,1 +1,1 @@
-export type VariableArgs<T = never, ARR extends never[] = never[]> = [...ARR, T | undefined];
+export type VariableArgs<T = any, ARR extends any[] = any[]> = [...ARR, T | undefined];

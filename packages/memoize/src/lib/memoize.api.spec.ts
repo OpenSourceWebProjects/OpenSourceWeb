@@ -40,6 +40,26 @@ describe('Memoize - all default APIs should work as expected', () => {
         expect(counter).toBe(1); // Only one call to the async function
         expect(unMemoizedTime).toBeGreaterThan(memoizedTime);
     });
+
+    it('Recursive memoization of an anonymous function', () => {
+        jest.useFakeTimers();
+        const store = new Map();
+
+        const fib = memoize(
+            (x: number): number => {
+                jest.advanceTimersByTime(500);
+
+                return x < 2 ? 1 : fib(x - 1) + fib(x - 2);
+            },
+            { store }
+        );
+        const unMemoizedTime = measureTimeMs(() => fib(10));
+        const memoizedTime = measureTimeMs(() => fib(11));
+
+        expect(store.size).toBe(12);
+        expect(unMemoizedTime).toBeGreaterThan(memoizedTime);
+    });
+
     it('Recursive memoization with default callback', () => {
         jest.useFakeTimers();
 
@@ -99,6 +119,26 @@ describe('Memoize - all default APIs should work as expected', () => {
         expect(unMemoizedRecursiveTime).toBeGreaterThan(memoizedRecursiveTime);
         expect(memoizedTime).toBeGreaterThan(memoizedRecursiveTime);
     });
+
+    it('Async recursive memoization of an anonymous function', async () => {
+        jest.useFakeTimers();
+        const store = new Map();
+
+        const fib = memoizeAsync(
+            async (x: number): Promise<number> => {
+                jest.advanceTimersByTime(500);
+
+                return x < 2 ? 1 : (await fib(x - 1)) + (await fib(x - 2));
+            },
+            { store }
+        );
+        const unMemoizedTime = await measureTimeMsAsync(() => fib(10));
+        const memoizedTime = await measureTimeMsAsync(() => fib(11));
+
+        expect(store.size).toBe(12);
+        expect(unMemoizedTime).toBeGreaterThan(memoizedTime);
+    });
+
     it('Async recursive memoization with default callback', async () => {
         jest.useFakeTimers();
 

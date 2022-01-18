@@ -23,6 +23,7 @@ Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
     -   anonymous functions - ~~implementation~~, tests
     -   outer scope variables - ~~implementation~~, tests
 -   Add rxjs operator
+-   Add onAdd, onDelete events
 
 ## Nice to have
 

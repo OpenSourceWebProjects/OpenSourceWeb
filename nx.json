@@ -5,7 +5,7 @@
         "defaultBase": "main"
     },
     "cli": {
-        "defaultCollection": "@nrwl/workspace"
+        "defaultCollection": "@nrwl/node"
     },
     "tasksRunnerOptions": {
         "default": {
@@ -36,5 +36,6 @@
                 "projects": "self"
             }
         ]
-    }
+    },
+    "defaultProject": "applications-memoize-demo"
 }
