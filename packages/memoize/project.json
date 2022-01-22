@@ -45,13 +45,19 @@
         "bundle": {
             "executor": "@nrwl/web:webpack",
             "outputs": ["{options.outputPath}"],
+            "dependsOn": [
+                {
+                    "target": "package",
+                    "projects": "dependencies"
+                }
+            ],
             "options": {
                 "libraryName": "memoize",
                 "libraryTargets": ["global", "commonjs", "amd", "umd"],
                 "index": "",
                 "tsConfig": "packages/memoize/tsconfig.lib.json",
                 "main": "packages/memoize/src/index.ts",
-                "outputPath": "dist/packages/memoize/bundle",
+                "outputPath": "dist/packages/memoize/bundles",
                 "compiler": "babel",
                 "optimization": true,
                 "extractLicenses": true,
@@ -68,7 +74,7 @@
             "executor": "@nrwl/workspace:run-commands",
             "outputs": [],
             "options": {
-                "command": "cd dist/packages/memoize && npm publish --tag=latest --access public"
+                "command": "cd dist/packages/memoize && npm publish --tag=latest --access public "
             }
         }
     },

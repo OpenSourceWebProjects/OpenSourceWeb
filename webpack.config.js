@@ -62,12 +62,23 @@ const modifyEntries = (config, libraryName, libraryTarget) => {
     };
 };
 
+const CompressionPlugin = require('compression-webpack-plugin');
+
 module.exports = (config, { options }) => {
     const libraryTargets = options.libraryTargets ?? ['global', 'commonjs', 'amd', 'umd'];
     const libraryName = options.libraryName;
 
     config.optimization.runtimeChunk = false;
-
+    const terser = config.optimization.minimizer.find((minimizer) => minimizer.constructor.name === 'TerserPlugin');
+    if (terser) {
+        terser.options.exclude = /\.gz\.js$/;
+    }
+    config.plugins = [
+        ...config.plugins,
+        new CompressionPlugin({
+            filename: `[name].gz[ext]`,
+        }),
+    ];
     modifyEntries(config, libraryName, libraryTargets);
 
     return config;
