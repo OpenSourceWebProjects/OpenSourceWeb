@@ -47,7 +47,7 @@
             "outputs": ["{options.outputPath}"],
             "options": {
                 "libraryName": "memoize",
-                "libraryTargets": ["var", "module", "global", "commonjs", "amd", "umd"],
+                "libraryTargets": ["global", "commonjs", "amd", "umd"],
                 "index": "",
                 "tsConfig": "packages/memoize/tsconfig.lib.json",
                 "main": "packages/memoize/src/index.ts",

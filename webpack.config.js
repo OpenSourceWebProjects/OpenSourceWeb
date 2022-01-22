@@ -25,7 +25,7 @@ const libraryTypesWithNames = {
 const getLibraryName = (type) => libraryTypesWithNames[type];
 
 const getLibrary = (type, name) => {
-    const unsetNameLibraries = ['module', 'amd', 'amd-require']; // these libraries cannot have a name
+    const unsetNameLibraries = ['module', 'amd-require']; // these libraries cannot have a name
     if (unsetNameLibraries.includes(type)) name = undefined;
     return { name, type };
 };
@@ -39,7 +39,8 @@ const modifyEntries = (config, libraryName, libraryTarget) => {
     }
 
     if (libraryTarget.includes('module')) {
-        // for esm library name must be unset and config.experiments.outputModule = true
+        // https://webpack.js.org/configuration/output/#librarytarget-module
+        // for esm library name must be unset and config.experiments.outputModule = true - This is experimental and might result in empty umd output
         config.experiments = {
             ...config.experiments,
             outputModule: true,
@@ -62,10 +63,11 @@ const modifyEntries = (config, libraryName, libraryTarget) => {
 };
 
 module.exports = (config, { options }) => {
-    const libraryTargets = options.libraryTargets ?? ['var', 'module', 'global', 'commonjs', 'amd', 'umd'];
+    const libraryTargets = options.libraryTargets ?? ['global', 'commonjs', 'amd', 'umd'];
     const libraryName = options.libraryName;
 
     config.optimization.runtimeChunk = false;
+
     modifyEntries(config, libraryName, libraryTargets);
 
     return config;
