@@ -41,11 +41,14 @@
                 "assets": ["packages/memoize/src/README.md"]
             }
         },
+
         "bundle": {
             "executor": "@nrwl/web:webpack",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "index": "packages/memoize/src/index.html",
+                "libraryName": "memoize",
+                "libraryTargets": ["var", "module", "global", "commonjs", "amd", "umd"],
+                "index": "",
                 "tsConfig": "packages/memoize/tsconfig.lib.json",
                 "main": "packages/memoize/src/index.ts",
                 "outputPath": "dist/packages/memoize/bundle",
@@ -57,9 +60,10 @@
                 "generateIndexHtml": false,
                 "commonChunk": false,
                 "namedChunks": false,
-                "webpackConfig": "webpack.config.umd.js"
+                "webpackConfig": "webpack.config.js"
             }
         },
+
         "publish": {
             "executor": "@nrwl/workspace:run-commands",
             "outputs": [],
