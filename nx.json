@@ -30,9 +30,15 @@
                 "projects": "dependencies"
             }
         ],
-        "publish": [
+        "bundle": [
             {
                 "target": "package",
+                "projects": "self"
+            }
+        ],
+        "publish": [
+            {
+                "target": "bundle",
                 "projects": "self"
             }
         ]

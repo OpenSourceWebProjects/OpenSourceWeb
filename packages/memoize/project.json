@@ -45,12 +45,6 @@
         "bundle": {
             "executor": "@nrwl/web:webpack",
             "outputs": ["{options.outputPath}"],
-            "dependsOn": [
-                {
-                    "target": "package",
-                    "projects": "dependencies"
-                }
-            ],
             "options": {
                 "libraryName": "memoize",
                 "libraryTargets": ["global", "commonjs", "amd", "umd"],
