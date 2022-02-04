@@ -15,6 +15,7 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@osw/benchmark": ["packages/benchmark/src/index.ts"],
             "@osw/better-stringify": ["packages/better-stringify/src/index.ts"],
             "@osw/memoize": ["packages/memoize/src/index.ts"]
         }

@@ -1,0 +1,76 @@
+{
+    "root": "packages/benchmark",
+    "sourceRoot": "packages/benchmark/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/packages/benchmark",
+                "main": "packages/benchmark/src/index.ts",
+                "tsConfig": "packages/benchmark/tsconfig.lib.json",
+                "assets": ["packages/benchmark/*.md"]
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["packages/benchmark/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/packages/benchmark"],
+            "options": {
+                "jestConfig": "packages/benchmark/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "package": {
+            "executor": "@nrwl/web:rollup",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "project": "packages/benchmark/package.json",
+                "outputPath": "dist/packages/benchmark",
+                "entryFile": "packages/benchmark/src/index.ts",
+                "tsConfig": "packages/benchmark/tsconfig.lib.json",
+                "compiler": "babel",
+                "format": ["cjs", "esm", "umd"],
+                "assets": ["packages/benchmark/src/README.md"]
+            }
+        },
+
+        "bundle": {
+            "executor": "@nrwl/web:webpack",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "libraryName": "benchmark",
+                "libraryTargets": ["global", "commonjs", "amd", "umd"],
+                "index": "",
+                "tsConfig": "packages/benchmark/tsconfig.lib.json",
+                "main": "packages/benchmark/src/index.ts",
+                "outputPath": "dist/packages/benchmark/bundles",
+                "compiler": "babel",
+                "optimization": true,
+                "extractLicenses": true,
+                "runtimeChunk": false,
+                "vendorChunk": false,
+                "generateIndexHtml": false,
+                "commonChunk": false,
+                "namedChunks": false,
+                "webpackConfig": "webpack.config.js"
+            }
+        },
+
+        "publish": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "cd dist/packages/benchmark && npm publish --tag=latest --access public "
+            }
+        }
+    },
+    "tags": []
+}

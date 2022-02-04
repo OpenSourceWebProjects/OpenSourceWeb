@@ -2,6 +2,7 @@
     "version": 2,
     "projects": {
         "applications-memoize-demo": "packages/applications/memoize-demo",
+        "benchmark": "packages/benchmark",
         "better-stringify": "packages/better-stringify",
         "memoize": "packages/memoize"
     }

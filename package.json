@@ -21,7 +21,9 @@
         "format:write": "nx format:write",
         "format:check": "nx format:check",
         "dep-graph": "nx dep-graph",
-        "help": "nx help"
+        "help": "nx help",
+        "bundle:memoize": "nx bundle memoize",
+        "bundle:benchmark": "nx bundle benchmark"
     },
     "private": true,
     "repository": {

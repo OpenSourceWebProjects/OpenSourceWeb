@@ -1,0 +1,9 @@
+{
+    "name": "@osw/benchmark",
+    "version": "0.0.1",
+    "type": "commonjs",
+    "files": [
+        "**/*"
+    ],
+    "dependencies": {}
+}
