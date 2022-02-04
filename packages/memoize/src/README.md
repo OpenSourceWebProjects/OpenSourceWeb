@@ -1,6 +1,20 @@
-# memoize
+# @OSW/Memoize
 
-This library was generated with [Nx](https://nx.dev).
+Fastest memoize library available.
+
+## Features:
+
+-   Simple and fully typed API
+-   Highly customizable
+-   Preserves the types of the memoized functions and methods
+-   Treeshake-able
+-   Lightweight
+    -   2.8 KB unminified without dependencies
+    -   2.5 KB minified with bundled dependencies
+    -   1 KB gzipped and minified with bundled dependencies
+-   Compatible with all module systems available - ESM, CJS, AMD, System, UMD, etc.
+
+## API
 
 ## Building
 
@@ -18,10 +32,10 @@ Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
 -   ~~Add async/await memoization~~
 -   ~~Add recursive memoization~~
 -   Improve recursive memoization to support:
-    -   async functions - ~~implementation, tests~~
-    -   generator functions - ~~implementation~~, tests
-    -   anonymous functions - ~~implementation~~, tests
-    -   outer scope variables - ~~implementation~~, tests
+    -   ~~async functions - implementation, tests~~
+    -   ~~generator functions - implementation tests~~,
+    -   ~~anonymous functions - implementation, tests~~
+    -   ~~outer scope variables - implementation, tests~~
 -   Add rxjs operator
 -   Add onAdd, onDelete events
 
@@ -35,8 +49,8 @@ Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
 
 # Limitations
 
--   Recursive functions need to have as a last parameter an optional parameter that is the recursive callback
--   generator functions are supported through the `memoize` function for both sync and async functions. FOr the same parameters they will return the cached generator so the `next` value will not be restarted when you create a new generator.
+-   Recursive functions need to have as a last parameter an optional parameter that is the recursive callback or need to be reimplemented using an anon
+-   Generator functions are supported through the `memoize` function for both sync and async functions. For the same parameters they will return the cached generator so the `next` value will not be restarted when you create a new generator, transforming the memoized generator into a singleton.
 
 ```typescript
     function* add(a: number, b: number) {

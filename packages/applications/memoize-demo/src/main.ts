@@ -34,9 +34,9 @@ function runSequentialBenchmark(n: number, m: number) {
 
 if (isMainThread) {
     runSequentialBenchmark(40, 39);
-    runSequentialBenchmark(100, 99);
+    runSequentialBenchmark(400, 399);
 }
-runThreadedBenchmark(40, 39);
+runThreadedBenchmark(400, 399);
 
 async function runThreadedBenchmark(n: number, m: number) {
     const bc = new BroadcastChannel('bc');

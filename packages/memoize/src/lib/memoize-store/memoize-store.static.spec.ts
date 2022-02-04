@@ -7,6 +7,7 @@ describe('store static functions', () => {
         expect(getTimeInMilliseconds(10, 'm')).toBe(600000);
         expect(getTimeInMilliseconds(10, 'h')).toBe(36000000);
         expect(getTimeInMilliseconds(10, 'd')).toBe(864000000);
+        expect(getTimeInMilliseconds(10, '' as any)).toBe(0);
     });
 
     it('isExpired', () => {

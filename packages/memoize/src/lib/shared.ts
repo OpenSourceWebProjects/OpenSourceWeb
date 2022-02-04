@@ -23,16 +23,16 @@ export async function measureTimeMsAsync(
     return performance.now() - time;
 }
 
-function isGeneratorFunction(fn: Function) {
-    const generatorFunction = function* () {
-        yield undefined;
-    }.constructor;
-    return fn instanceof generatorFunction;
-}
+// function isGeneratorFunction(fn: Function) {
+//     const generatorFunction = function* () {
+//         yield undefined;
+//     }.constructor;
+//     return fn instanceof generatorFunction;
+// }
 
-function isAsyncFunction(fn: Function) {
-    const asyncFunction = async function () {
-        return Promise.resolve();
-    }.constructor;
-    return fn instanceof asyncFunction;
-}
+// function isAsyncFunction(fn: Function) {
+//     const asyncFunction = async function () {
+//         return Promise.resolve();
+//     }.constructor;
+//     return fn instanceof asyncFunction;
+// }

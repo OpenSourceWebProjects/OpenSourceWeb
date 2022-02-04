@@ -11,7 +11,10 @@ describe('Memoize functions by type', () => {
             jest.advanceTimersByTime(50000);
             return a + b;
         },
-        'fat-arrow-function': (a: number, b: number) => a + b,
+        'fat-arrow-function': (a: number, b: number) => {
+            jest.advanceTimersByTime(50000);
+            return a + b;
+        },
     };
 
     it('Each function should be memoized', () => {
@@ -33,7 +36,10 @@ describe('Memoize functions by type', () => {
             jest.advanceTimersByTime(50000);
             return Promise.resolve(a + b);
         },
-        'fat-arrow-async-function': async (a: number, b: number) => Promise.resolve(a + b),
+        'fat-arrow-async-function': async (a: number, b: number) => {
+            jest.advanceTimersByTime(50000);
+            return Promise.resolve(a + b);
+        },
     };
 
     it('Each async function should be memoized', async () => {
@@ -67,7 +73,8 @@ describe('Memoize functions by type', () => {
             const generator = fn(1, 2);
             const time = measureTimeMs(() => memoizedGenerator.next());
             const memoizedTime = measureTimeMs(() => generator.next());
-            expect(time).toBeGreaterThan(memoizedTime);
+            // The generator acts as a singleton so it will return only the next value, memoizing it will not improve the performance or will improve it only by a small amount
+            expect(time).toBeGreaterThanOrEqual(memoizedTime);
 
             expect(memoizedGenerator.next()).toStrictEqual(generator.next());
             expect(memoized(1, 2).next()).not.toBe(fn(1, 2).next());
@@ -96,7 +103,8 @@ describe('Memoize functions by type', () => {
             const generator = fn(1, 2);
             const time = measureTimeMs(() => memoized(1, 2));
             const memoizedTime = measureTimeMs(async () => memoized(1, 2));
-            expect(time).toBeGreaterThan(memoizedTime);
+            // The generator acts as a singleton so it will return only the next value, memoizing it will not improve the performance or will improve it only by a small amount
+            expect(time).toBeGreaterThanOrEqual(memoizedTime);
 
             expect(await memoizedGenerator.next()).toStrictEqual(await generator.next());
             expect(await memoized(1, 2).next()).not.toBe(await fn(1, 2).next());
