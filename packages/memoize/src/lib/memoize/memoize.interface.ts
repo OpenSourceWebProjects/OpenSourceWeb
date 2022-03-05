@@ -4,6 +4,7 @@ import { VariableArgs } from '../shared.interface';
 export interface MemoizeStringify {
     /** Defaults to: @ows/better-stringify */
     stringify: (value: any, ...args: any[]) => string;
+    /** Arguments for `stringify` */
     args?: any[];
 }
 

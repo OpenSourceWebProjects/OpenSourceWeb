@@ -1,5 +1,5 @@
 import { MemoizeStore } from '../memoize-store/memoize-store.api';
-import { MemoizeOptions } from '../memoize.interface.api';
+import { MemoizeBaseOptions } from '../memoize.interface.api';
 import {
     MemoizeAsyncCallback,
     MemoizeCallback,
@@ -11,7 +11,7 @@ import { MEMOIZE_STRINGIFY_OPTIONS } from './memoize.static';
 
 export function memoize<T extends MemoizeCallback>(
     callback: T,
-    options?: MemoizeOptions<ReturnType<T>>,
+    options?: MemoizeBaseOptions<ReturnType<T>>,
     referenceItself = false
 ): MemoizedFunction<T> {
     const stringify: MemoizeStringify = options?.stringify ?? MEMOIZE_STRINGIFY_OPTIONS;
@@ -33,7 +33,7 @@ export function memoize<T extends MemoizeCallback>(
 
 export function memoizeAsync<T extends MemoizeAsyncCallback>(
     callback: T,
-    options?: MemoizeOptions<ReturnType<T>>,
+    options?: MemoizeBaseOptions<ReturnType<T>>,
     referenceItself = false
 ): MemoizedAsyncFunction<T> {
     const stringify: MemoizeStringify = options?.stringify ?? MEMOIZE_STRINGIFY_OPTIONS;

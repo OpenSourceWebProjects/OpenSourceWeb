@@ -1,5 +1,4 @@
-import { memoizeAsyncRecursive, memoizeLast, memoizeRecursive } from '..';
-import { memoize, memoizeAsync } from './memoize.api';
+import { memoizeAsync, memoizeAsyncRecursive, memoizeLast, memoizeSync, memoizeSyncRecursive } from './memoize.api';
 import { measureTimeMs, measureTimeMsAsync } from './shared';
 
 describe('Memoize - all default APIs should work as expected', () => {
@@ -15,7 +14,6 @@ describe('Memoize - all default APIs should work as expected', () => {
         const memoizedAdd = memoizeLast(add, { store });
         memoizedAdd(1, 2);
         memoizedAdd(2, 3);
-
         expect(Array.from(store.keys()).length).toBe(1);
         expect(Array.from(store.keys())[0]).toBe('[2,3]');
     });
@@ -45,7 +43,7 @@ describe('Memoize - all default APIs should work as expected', () => {
         jest.useFakeTimers();
         const store = new Map();
 
-        const fib = memoize(
+        const fib = memoizeSync(
             (x: number): number => {
                 jest.advanceTimersByTime(500);
 
@@ -75,11 +73,11 @@ describe('Memoize - all default APIs should work as expected', () => {
             }
         }
 
-        const memoizedRecursiveFibonacci = memoizeRecursive(fibonacci, { store: recursiveStore });
+        const memoizedRecursiveFibonacci = memoizeSyncRecursive(fibonacci, { store: recursiveStore });
         const unMemoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(10));
         const memoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(11));
 
-        const memoizedFibonacci = memoize(fibonacci, { store });
+        const memoizedFibonacci = memoizeSync(fibonacci, { store });
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const unMemoizedTime = measureTimeMs(() => memoizedFibonacci(10));
         const memoizedTime = measureTimeMs(() => memoizedFibonacci(11));
@@ -105,11 +103,11 @@ describe('Memoize - all default APIs should work as expected', () => {
             }
         }
 
-        const memoizedRecursiveFibonacci = memoizeRecursive(fibonacci, { store: recursiveStore });
+        const memoizedRecursiveFibonacci = memoizeSyncRecursive(fibonacci, { store: recursiveStore });
         const unMemoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(10));
         const memoizedRecursiveTime = measureTimeMs(() => memoizedRecursiveFibonacci(11));
 
-        const memoizedFibonacci = memoize(fibonacci, { store });
+        const memoizedFibonacci = memoizeSync(fibonacci, { store });
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const unMemoizedTime = measureTimeMs(() => memoizedFibonacci(10));
         const memoizedTime = measureTimeMs(() => memoizedFibonacci(11));

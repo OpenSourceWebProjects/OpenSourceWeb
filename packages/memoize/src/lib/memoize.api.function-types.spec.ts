@@ -1,4 +1,4 @@
-import { memoize, memoizeAsync } from './memoize.api';
+import { memoize, memoizeAsync, memoizeSync } from './memoize.api';
 import { measureTimeMs, measureTimeMsAsync } from './shared';
 
 describe('Memoize functions by type', () => {
@@ -20,7 +20,7 @@ describe('Memoize functions by type', () => {
     it('Each function should be memoized', () => {
         jest.useFakeTimers();
         Object.values(functionTypes).forEach((fn) => {
-            const memoized = memoize(fn);
+            const memoized = memoizeSync(fn);
             const time = measureTimeMs(() => memoized(1, 2));
             const memoizedTime = measureTimeMs(() => memoized(1, 2));
             expect(time).toBeGreaterThan(memoizedTime);
@@ -52,6 +52,23 @@ describe('Memoize functions by type', () => {
         });
     });
 
+    it('Each function should be memoized with the correct sync/async type detected', async () => {
+        jest.useFakeTimers();
+
+        Object.values(functionTypes).forEach((fn) => {
+            const memoized = memoize(fn);
+            const time = measureTimeMs(() => memoized(1, 2));
+            const memoizedTime = measureTimeMs(() => memoized(1, 2));
+            expect(time).toBeGreaterThan(memoizedTime);
+        });
+        Object.values(asyncFunctionTypes).forEach(async (fn) => {
+            const memoized = memoize(fn);
+            const time = await measureTimeMsAsync(() => memoized(1, 2));
+            const memoizedTime = await measureTimeMsAsync(() => memoized(1, 2));
+            expect(time).toBeGreaterThan(memoizedTime);
+        });
+    });
+
     const genertorFunctionTypes = {
         'function*': function* add(a: number, b: number) {
             jest.advanceTimersByTime(50000);
@@ -68,7 +85,7 @@ describe('Memoize functions by type', () => {
     it('Each generator function type should be memoized', () => {
         jest.useFakeTimers();
         Object.values(genertorFunctionTypes).forEach((fn) => {
-            const memoized = memoize(fn);
+            const memoized = memoizeSync(fn);
             const memoizedGenerator = memoized(1, 2);
             const generator = fn(1, 2);
             const time = measureTimeMs(() => memoizedGenerator.next());
@@ -97,7 +114,7 @@ describe('Memoize functions by type', () => {
     it('Each async generator function should be memoized', async () => {
         jest.useFakeTimers();
         Object.values(asyncGeneratorFunctionTypes).forEach(async (fn) => {
-            const memoized = memoize(fn);
+            const memoized = memoizeSync(fn);
 
             const memoizedGenerator = memoized(1, 2);
             const generator = fn(1, 2);

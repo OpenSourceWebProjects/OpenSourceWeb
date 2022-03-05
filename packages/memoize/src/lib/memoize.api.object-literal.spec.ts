@@ -1,5 +1,4 @@
-import { memoizeAsyncRecursive, memoizeRecursive } from '..';
-import { memoize, memoizeAsync } from './memoize.api';
+import { memoizeAsync, memoizeAsyncRecursive, memoizeSync, memoizeSyncRecursive } from './memoize.api';
 import { measureTimeMs, measureTimeMsAsync } from './shared';
 
 describe('Memoized functions should reference this in object literal', () => {
@@ -50,8 +49,8 @@ describe('Memoized functions should reference this in object literal', () => {
 
     it('Named functions', () => {
         jest.useFakeTimers();
-        const memoized = memoize(obj.fib);
-        const memoizedRecursive = memoizeRecursive(obj.fib);
+        const memoized = memoizeSync(obj.fib);
+        const memoizedRecursive = memoizeSyncRecursive(obj.fib);
 
         let time = measureTimeMs(() => memoized(30));
         expect(obj.count.fib).toBeGreaterThan(0);
@@ -71,8 +70,8 @@ describe('Memoized functions should reference this in object literal', () => {
 
     it('Anonymous functions', () => {
         jest.useFakeTimers();
-        const memoized = memoize(obj.anonymousFib);
-        const memoizedRecursive = memoizeRecursive(obj.anonymousFib);
+        const memoized = memoizeSync(obj.anonymousFib);
+        const memoizedRecursive = memoizeSyncRecursive(obj.anonymousFib);
 
         let time = measureTimeMs(() => memoized(30));
         expect(obj.count.anonymousFib).toBeGreaterThan(0);

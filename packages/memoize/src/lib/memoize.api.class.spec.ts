@@ -1,5 +1,4 @@
-import { memoizeAsyncRecursive, memoizeRecursive } from '..';
-import { memoize, memoizeAsync } from './memoize.api';
+import { memoizeAsync, memoizeAsyncRecursive, memoizeSync, memoizeSyncRecursive } from './memoize.api';
 import { measureTimeMs, measureTimeMsAsync } from './shared';
 
 describe('Memoized methods should reference this in classes', () => {
@@ -18,7 +17,7 @@ describe('Memoized methods should reference this in classes', () => {
             return Promise.resolve(a + b);
         }
 
-        memoizedAdd = memoize(this.add, { thisArg: this });
+        memoizedAdd = memoizeSync(this.add, { thisArg: this });
 
         memoizedAsyncAdd = memoizeAsync(this.asyncAdd, { thisArg: this });
 
@@ -35,11 +34,11 @@ describe('Memoized methods should reference this in classes', () => {
             return n < 2 ? n : (await (cb ?? this.asyncFib)(n - 1)) + (await (cb ?? this.asyncFib)(n - 2));
         }
 
-        memoizedRecursiveFib = memoizeRecursive(this.fib, { thisArg: this });
+        memoizedRecursiveFib = memoizeSyncRecursive(this.fib, { thisArg: this });
         memoizedAsyncRecursiveFib = memoizeAsyncRecursive(this.asyncFib, { thisArg: this });
 
         // cannot keep reference to this
-        memoizedFib = memoize(this.fib, { thisArg: this });
+        memoizedFib = memoizeSync(this.fib, { thisArg: this });
 
         // cannot keep reference to this
         memoizedAsyncFib = memoizeAsync(this.asyncFib, { thisArg: this });
@@ -54,8 +53,8 @@ describe('Memoized methods should reference this in classes', () => {
     it('Error - Recursive methods memoized using memoize instead of memoizeRecursive should fail keeping reference to bound this', async () => {
         jest.useFakeTimers();
 
-        const memoized = memoize(clss.fib, { thisArg: clss });
-        const memoizedAsync = memoize(clss.asyncFib, { thisArg: clss });
+        const memoized = memoizeSync(clss.fib, { thisArg: clss });
+        const memoizedAsync = memoizeSync(clss.asyncFib, { thisArg: clss });
         expect(() => memoized(30)).toThrowError();
         expect(async () => await memoizedAsync(30)).rejects.toThrowError();
     });
@@ -85,7 +84,7 @@ describe('Memoized methods should reference this in classes', () => {
 
     it('Memoize class methods by binding the object', () => {
         jest.useFakeTimers();
-        const memoized = memoize(clss.add, { thisArg: clss });
+        const memoized = memoizeSync(clss.add, { thisArg: clss });
         const time = measureTimeMs(() => memoized(30, 60));
         expect(clss.count.add).toBeGreaterThan(0);
 
@@ -97,7 +96,7 @@ describe('Memoized methods should reference this in classes', () => {
 
     it('Memoize class methods by binding the object', () => {
         jest.useFakeTimers();
-        const memoized = memoize(clss.add.bind(clss));
+        const memoized = memoizeSync(clss.add.bind(clss));
         const time = measureTimeMs(() => memoized(30, 60));
         expect(clss.count.add).toBeGreaterThan(0);
 
@@ -108,7 +107,7 @@ describe('Memoized methods should reference this in classes', () => {
     });
 
     it('Error - Memoize class methods without binding the object', () => {
-        const memoized = memoize(clss.add);
+        const memoized = memoizeSync(clss.add);
         expect(() => memoized(30, 60)).toThrowError();
     });
 
@@ -137,7 +136,7 @@ describe('Memoized methods should reference this in classes', () => {
 
     it('Memoize recursive class methods by binding the object', () => {
         jest.useFakeTimers();
-        const memoizedRecursive = memoizeRecursive(clss.fib, { thisArg: clss });
+        const memoizedRecursive = memoizeSyncRecursive(clss.fib, { thisArg: clss });
         const time = measureTimeMs(() => memoizedRecursive(30));
         expect(clss.count.fib).toBeGreaterThan(0);
 
@@ -149,7 +148,7 @@ describe('Memoized methods should reference this in classes', () => {
 
     it('Memoize recursive class methods by binding the object', () => {
         jest.useFakeTimers();
-        const memoizedRecursive = memoizeRecursive(clss.fib.bind(clss));
+        const memoizedRecursive = memoizeSyncRecursive(clss.fib.bind(clss));
         const time = measureTimeMs(() => memoizedRecursive(30));
         expect(clss.count.fib).toBeGreaterThan(0);
 
@@ -160,7 +159,7 @@ describe('Memoized methods should reference this in classes', () => {
     });
 
     it('Error - Memoize recursive class methods without binding the object', () => {
-        const memoized = memoizeRecursive(clss.fib);
+        const memoized = memoizeSyncRecursive(clss.fib);
         expect(() => memoized(30)).toThrowError();
     });
 

@@ -1,4 +1,4 @@
-import { MemoizeOptions } from './memoize.interface.api';
+import { MemoizeBaseOptions, MemoizeOptions } from './memoize.interface.api';
 import { memoize as memoizeFn, memoizeAsync as memoizeAsyncFn } from './memoize/memoize';
 import {
     MemoizeAsyncCallback,
@@ -10,38 +10,59 @@ import {
     MemoizedRecursiveFunction,
     MemoizeRecursiveCallback,
 } from './memoize/memoize.interface';
+import { isAsyncFunction, warnTransformedCode } from './shared';
 
-export function memoize<T extends MemoizeCallback>(
+export function memoizeLast<T extends MemoizeCallback | MemoizeAsyncCallback>(
     callback: T,
     options?: MemoizeOptions<ReturnType<T>>
+) {
+    return memoize(callback, { ...options, size: { max: 1 } });
+}
+export function memoize<
+    T extends MemoizeCallback | MemoizeAsyncCallback,
+    R extends MemoizedFunction<T> | MemoizedAsyncFunction<T> = T extends MemoizeCallback
+        ? MemoizedFunction<T>
+        : MemoizedAsyncFunction<T>
+>(callback: T, options?: MemoizeOptions<ReturnType<T>>): R {
+    if (options?.async === undefined)
+        warnTransformedCode(
+            'Please set the `async` flag or use the specialized functions: memoizeSync, memoizeAsync, memoizeSyncRecursive, memoizeAsyncRecursive'
+        );
+
+    const isAsync = options?.async ?? isAsyncFunction(callback);
+    if (options?.recursive) {
+        if (isAsync) return memoizeAsyncRecursive(callback, options) as R;
+        return memoizeSyncRecursive(callback, options) as R;
+    }
+
+    if (isAsync) return memoizeAsync(callback, options) as R;
+    return memoizeSync(callback, options) as R;
+}
+
+export function memoizeSync<T extends MemoizeCallback>(
+    callback: T,
+    options?: MemoizeBaseOptions<ReturnType<T>>
 ): MemoizedFunction<T> {
     return memoizeFn(callback, options);
 }
 
-export function memoizeLast<T extends MemoizeCallback>(
-    callback: T,
-    options?: MemoizeOptions<ReturnType<T>>
-): MemoizedFunction<T> {
-    return memoize(callback, { ...options, size: { max: 1 } });
-}
-
 export function memoizeAsync<T extends MemoizeAsyncCallback>(
     callback: T,
-    options?: MemoizeOptions<ReturnType<T>>
+    options?: MemoizeBaseOptions<ReturnType<T>>
 ): MemoizedAsyncFunction<T> {
     return memoizeAsyncFn(callback, options);
 }
 
-export function memoizeRecursive<T extends MemoizeRecursiveCallback>(
+export function memoizeSyncRecursive<T extends MemoizeRecursiveCallback>(
     callback: T,
-    options?: MemoizeOptions<ReturnType<T>>
+    options?: MemoizeBaseOptions<ReturnType<T>>
 ): MemoizedRecursiveFunction<T> {
     return memoizeFn(callback, options, true);
 }
 
 export function memoizeAsyncRecursive<T extends MemoizeAsyncRecursiveCallback>(
     callback: T,
-    options?: MemoizeOptions<ReturnType<T>>
+    options?: MemoizeBaseOptions<ReturnType<T>>
 ): MemoizedAsyncRecursiveFunction<T> {
     return memoizeAsyncFn(callback, options, true);
 }
