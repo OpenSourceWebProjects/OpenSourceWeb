@@ -2,6 +2,17 @@
 
 Fastest memoize library available.
 
+## Table of contents
+- [@OSW/Memoize](#oswmemoize)
+  - [Table of contents](#table-of-contents)
+  - [Features:](#features)
+  - [API](#api)
+  - [Building](#building)
+  - [Running unit tests](#running-unit-tests)
+- [Roadmap](#roadmap)
+  - [Nice to have](#nice-to-have)
+- [Limitations](#limitations)
+
 ## Features:
 
 -   Simple and fully typed API
