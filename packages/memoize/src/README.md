@@ -38,12 +38,13 @@ Run `nx test memoize` to execute the unit tests via [Jest](https://jestjs.io).
     -   ~~outer scope variables - implementation, tests~~
 -   Add rxjs operator
 -   Add onAdd, onDelete events
+-   Custom invalidation
 
 ## Nice to have
 
 -   Recursive function memoization without needing additional parameters
--   Autodetect async functions
--   Unite all memoization types under the same API with correct type inference
+-   ~~Autodetect async functions~~
+-   ~~Unite all memoization types under the same API with correct type inference~~
 -   Disable input for env.
 -   Statistics - E.g. https://github.com/medikoo/memoizee#profiling--statistics
 
