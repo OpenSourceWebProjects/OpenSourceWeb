@@ -66,3 +66,16 @@ export function memoizeAsyncRecursive<T extends MemoizeAsyncRecursiveCallback>(
 ): MemoizedAsyncRecursiveFunction<T> {
     return memoizeAsyncFn(callback, options, true);
 }
+
+export function Memoize<T extends MemoizeCallback | MemoizeAsyncCallback>(options?: MemoizeOptions<ReturnType<T>>) {
+    return (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
+        console.log(target, propertyKey, descriptor);
+        if (descriptor.value != null) {
+            descriptor.value = memoize(descriptor.value, { thisArg: target, ...options });
+        } else if (descriptor.get != null) {
+            descriptor.get = memoize(descriptor.get, { thisArg: target, ...options });
+        } else {
+            throw 'Only put a Memoize() decorator on a method or get accessor.';
+        }
+    };
+}

@@ -28,6 +28,15 @@
                 "passWithNoTests": true
             }
         },
+        "copy-files": {},
+        "copy-readme": {
+            "executor": "@nrwl/workspace:copy-files",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "files": ["README.md"],
+                "outputPath": "dist/packages/memoize"
+            }
+        },
         "package": {
             "executor": "@nrwl/web:rollup",
             "outputs": ["{options.outputPath}"],
@@ -37,11 +46,9 @@
                 "entryFile": "packages/memoize/src/index.ts",
                 "tsConfig": "packages/memoize/tsconfig.lib.json",
                 "compiler": "babel",
-                "format": ["cjs", "esm", "umd"],
-                "assets": ["packages/memoize/src/README.md"]
+                "format": ["cjs", "esm", "umd"]
             }
         },
-
         "bundle": {
             "executor": "@nrwl/web:webpack",
             "outputs": ["{options.outputPath}"],
@@ -63,7 +70,13 @@
                 "webpackConfig": "webpack.config.js"
             }
         },
-
+        "package-all": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [],
+            "options": {
+                "command": "nx run memoize:copy-readme && nx memoize:run package && nx run memoize:bundle"
+            }
+        },
         "publish": {
             "executor": "@nrwl/workspace:run-commands",
             "outputs": [],
